@@ -12,9 +12,10 @@ import {
   ID, Doc, AbstractType // eslint-disable-line
 } from '../internals.js'
 
+import { unexpectedCase } from '../utils/errors.js'
+
 import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
-import * as error from 'lib0/error'
 
 /**
  * A relative position is based on the Yjs model and is not affected by document changes.
@@ -206,7 +207,7 @@ export const writeRelativePosition = (encoder, rpos) => {
     encoding.writeUint8(encoder, 2)
     writeID(encoder, type)
   } else {
-    throw error.unexpectedCase()
+    throw unexpectedCase()
   }
   encoding.writeVarInt(encoder, assoc)
   return encoder
@@ -307,7 +308,7 @@ export const createAbsolutePositionFromRelativePosition = (rpos, doc) => {
         return null
       }
     } else {
-      throw error.unexpectedCase()
+      throw unexpectedCase()
     }
     if (assoc >= 0) {
       index = type._length

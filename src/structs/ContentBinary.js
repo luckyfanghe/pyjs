@@ -2,7 +2,7 @@ import {
   UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, StructStore, Item, Transaction // eslint-disable-line
 } from '../internals.js'
 
-import * as error from 'lib0/error'
+import { methodUnimplemented } from '../utils/errors.js'
 
 export class ContentBinary {
   /**
@@ -45,7 +45,7 @@ export class ContentBinary {
    * @return {ContentBinary}
    */
   splice (offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**

@@ -1,7 +1,8 @@
 
-import * as error from 'lib0/error'
+
 import * as encoding from 'lib0/encoding'
 
+import { unexpectedCase } from '../utils/errors.js'
 import {
   ID // eslint-disable-line
 } from '../internals.js'
@@ -153,7 +154,7 @@ export class DSEncoderV2 {
    */
   writeDsLen (len) {
     if (len === 0) {
-      error.unexpectedCase()
+      unexpectedCase()
     }
     encoding.writeVarUint(this.restEncoder, len - 1)
     this.dsCurrVal += len

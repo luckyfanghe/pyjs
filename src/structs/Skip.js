@@ -3,7 +3,9 @@ import {
   AbstractStruct,
   UpdateEncoderV1, UpdateEncoderV2, StructStore, Transaction, ID // eslint-disable-line
 } from '../internals.js'
-import * as error from 'lib0/error'
+
+import { unexpectedCase } from '../utils/errors.js'
+
 import * as encoding from 'lib0/encoding'
 
 export const structSkipRefNumber = 10
@@ -36,7 +38,7 @@ export class Skip extends AbstractStruct {
    */
   integrate (transaction, offset) {
     // skip structs cannot be integrated
-    error.unexpectedCase()
+    unexpectedCase()
   }
 
   /**

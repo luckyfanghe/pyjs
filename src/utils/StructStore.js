@@ -5,8 +5,9 @@ import {
   Transaction, ID, Item, DSDecoderV2 // eslint-disable-line
 } from '../internals.js'
 
+import { unexpectedCase } from '../utils/errors.js'
+
 import * as math from 'lib0/math'
-import * as error from 'lib0/error'
 
 export class StructStore {
   constructor () {
@@ -94,7 +95,7 @@ export const addStruct = (store, struct) => {
   } else {
     const lastStruct = structs[structs.length - 1]
     if (lastStruct.id.clock + lastStruct.length !== struct.id.clock) {
-      throw error.unexpectedCase()
+      throw unexpectedCase()
     }
   }
   structs.push(struct)
@@ -136,7 +137,7 @@ export const findIndexSS = (structs, clock) => {
   }
   // Always check state before looking for a struct in StructStore
   // Therefore the case of not finding a struct is unexpected
-  throw error.unexpectedCase()
+  throw unexpectedCase()
 }
 
 /**

@@ -3,7 +3,7 @@ import {
   AbstractType, UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, Item, StructStore, Transaction // eslint-disable-line
 } from '../internals.js'
 
-import * as error from 'lib0/error'
+import { methodUnimplemented } from '../utils/errors.js'
 
 /**
  * @private
@@ -51,7 +51,7 @@ export class ContentFormat {
    * @return {ContentFormat}
    */
   splice (offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**

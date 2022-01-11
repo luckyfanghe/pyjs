@@ -14,9 +14,10 @@ import {
   ContentDoc, YText, YArray, UpdateEncoderV1, UpdateEncoderV2, Doc, Snapshot, Transaction, EventHandler, YEvent, Item, // eslint-disable-line
 } from '../internals.js'
 
+import { create, methodUnimplemented } from '../utils/errors.js'
+
 import * as map from 'lib0/map'
 import * as iterator from 'lib0/iterator'
-import * as error from 'lib0/error'
 import * as math from 'lib0/math'
 
 const maxSearchMarker = 80
@@ -313,14 +314,14 @@ export class AbstractType {
    * @return {AbstractType<EventType>}
    */
   _copy () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @return {AbstractType<EventType>}
    */
   clone () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -683,7 +684,7 @@ export const typeListInsertGenericsAfter = (transaction, parent, referenceItem, 
   packJsonContent()
 }
 
-const lengthExceeded = error.create('Length exceeded!')
+const lengthExceeded = create('Length exceeded!')
 
 /**
  * @param {Transaction} transaction

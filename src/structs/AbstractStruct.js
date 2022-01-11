@@ -3,7 +3,7 @@ import {
   UpdateEncoderV1, UpdateEncoderV2, ID, Transaction // eslint-disable-line
 } from '../internals.js'
 
-import * as error from 'lib0/error'
+import { methodUnimplemented} from '../utils/errors.js'
 
 export class AbstractStruct {
   /**
@@ -19,7 +19,7 @@ export class AbstractStruct {
    * @type {boolean}
    */
   get deleted () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -39,7 +39,7 @@ export class AbstractStruct {
    * @param {number} encodingRef
    */
   write (encoder, offset, encodingRef) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -47,6 +47,6 @@ export class AbstractStruct {
    * @param {number} offset
    */
   integrate (transaction, offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 }

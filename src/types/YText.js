@@ -30,9 +30,10 @@ import {
   ArraySearchMarker, UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, ID, Doc, Item, Snapshot, Transaction // eslint-disable-line
 } from '../internals.js'
 
+import { unexpectedCase } from '../utils/errors.js'
+
 import * as object from 'lib0/object'
 import * as map from 'lib0/map'
-import * as error from 'lib0/error'
 
 /**
  * @param {any} a
@@ -60,7 +61,7 @@ export class ItemTextListPosition {
    */
   forward () {
     if (this.right === null) {
-      error.unexpectedCase()
+      unexpectedCase()
     }
     switch (this.right.content.constructor) {
       case ContentFormat:

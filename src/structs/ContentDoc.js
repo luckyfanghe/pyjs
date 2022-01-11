@@ -3,7 +3,7 @@ import {
   Doc, UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, StructStore, Transaction, Item // eslint-disable-line
 } from '../internals.js'
 
-import * as error from 'lib0/error'
+import { methodUnimplemented } from '../utils/errors.js'
 
 /**
  * @param {string} guid
@@ -75,7 +75,7 @@ export class ContentDoc {
    * @return {ContentDoc}
    */
   splice (offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**

@@ -25,7 +25,8 @@ import {
   UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, ContentType, ContentDeleted, StructStore, ID, AbstractType, Transaction // eslint-disable-line
 } from '../internals.js'
 
-import * as error from 'lib0/error'
+import { methodUnimplemented, unexpectedCase } from '../utils/errors.js'
+
 import * as binary from 'lib0/binary'
 
 /**
@@ -623,7 +624,7 @@ export class Item extends AbstractStruct {
    */
   gc (store, parentGCd) {
     if (!this.deleted) {
-      throw error.unexpectedCase()
+      throw unexpectedCase()
     }
     this.content.gc(store)
     if (parentGCd) {
@@ -678,7 +679,7 @@ export class Item extends AbstractStruct {
         encoder.writeParentInfo(false) // write parent id
         encoder.writeLeftID(parent)
       } else {
-        error.unexpectedCase()
+        unexpectedCase()
       }
       if (parentSub !== null) {
         encoder.writeString(parentSub)
@@ -700,7 +701,7 @@ export const readItemContent = (decoder, info) => contentRefs[info & binary.BITS
  * @type {Array<function(UpdateDecoderV1 | UpdateDecoderV2):AbstractContent>}
  */
 export const contentRefs = [
-  () => { error.unexpectedCase() }, // GC is not ItemContent
+  () => { unexpectedCase() }, // GC is not ItemContent
   readContentDeleted, // 1
   readContentJSON, // 2
   readContentBinary, // 3
@@ -710,7 +711,7 @@ export const contentRefs = [
   readContentType, // 7
   readContentAny, // 8
   readContentDoc, // 9
-  () => { error.unexpectedCase() } // 10 - Skip is not ItemContent
+  () => { unexpectedCase() } // 10 - Skip is not ItemContent
 ]
 
 /**
@@ -721,14 +722,14 @@ export class AbstractContent {
    * @return {number}
    */
   getLength () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @return {Array<any>}
    */
   getContent () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -741,14 +742,14 @@ export class AbstractContent {
    * @return {boolean}
    */
   isCountable () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @return {AbstractContent}
    */
   copy () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -756,7 +757,7 @@ export class AbstractContent {
    * @return {AbstractContent}
    */
   splice (offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -764,7 +765,7 @@ export class AbstractContent {
    * @return {boolean}
    */
   mergeWith (right) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -772,21 +773,21 @@ export class AbstractContent {
    * @param {Item} item
    */
   integrate (transaction, item) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @param {Transaction} transaction
    */
   delete (transaction) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @param {StructStore} store
    */
   gc (store) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
@@ -794,13 +795,13 @@ export class AbstractContent {
    * @param {number} offset
    */
   write (encoder, offset) {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 
   /**
    * @return {number}
    */
   getRef () {
-    throw error.methodUnimplemented()
+    throw methodUnimplemented()
   }
 }
