@@ -15,8 +15,8 @@ import {
 } from '../internals.js'
 
 import { create, methodUnimplemented } from '../utils/errors.js'
+import { setIfUndefined, entries } from '../utils/map.js'
 
-import * as map from 'lib0/map'
 import * as iterator from 'lib0/iterator'
 
 const maxSearchMarker = 80
@@ -239,7 +239,7 @@ export const callTypeObservers = (type, transaction, event) => {
   const changedParentTypes = transaction.changedParentTypes
   while (true) {
     // @ts-ignore
-    map.setIfUndefined(changedParentTypes, type, () => []).push(event)
+    setIfUndefined(changedParentTypes, type, () => []).push(event)
     if (type._item === null) {
       break
     }
@@ -909,4 +909,4 @@ export const typeMapGetSnapshot = (parent, key, snapshot) => {
  * @private
  * @function
  */
-export const createMapIterator = map => iterator.iteratorFilter(map.entries(), /** @param {any} entry */ entry => !entry[1].deleted)
+export const createMapIterator = map => iterator.iteratorFilter(entries(), /** @param {any} entry */ entry => !entry[1].deleted)

@@ -2,7 +2,6 @@
 import * as binary from './binary.js'
 import * as decoding from 'lib0/decoding'
 import * as encoding from 'lib0/encoding'
-import * as logging from 'lib0/logging'
 
 import {
   createID,
@@ -107,9 +106,9 @@ export const logUpdateV2 = (update, YDecoder = UpdateDecoderV2) => {
   for (let curr = lazyDecoder.curr; curr !== null; curr = lazyDecoder.next()) {
     structs.push(curr)
   }
-  logging.print('Structs: ', structs)
+  console.log('Structs: ', structs)
   const ds = readDeleteSet(updateDecoder)
-  logging.print('DeleteSet: ', ds)
+  console.log('DeleteSet: ', ds)
 }
 
 export class LazyStructWriter {

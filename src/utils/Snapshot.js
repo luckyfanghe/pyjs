@@ -18,7 +18,8 @@ import {
   DSEncoderV1, DSEncoderV2, DSDecoderV1, DSDecoderV2, Transaction, Doc, DeleteSet, Item // eslint-disable-line
 } from '../internals.js'
 
-import * as map from 'lib0/map'
+import { setIfUndefined } from './map.js'
+
 import * as decoding from 'lib0/decoding'
 import * as encoding from 'lib0/encoding'
 
@@ -137,7 +138,7 @@ export const isVisible = (item, snapshot) => snapshot === undefined
  * @param {Snapshot} snapshot
  */
 export const splitSnapshotAffectedStructs = (transaction, snapshot) => {
-  const meta = map.setIfUndefined(transaction.meta, splitSnapshotAffectedStructs, new Set())
+  const meta = setIfUndefined(transaction.meta, splitSnapshotAffectedStructs, new Set())
   const store = transaction.doc.store
   // check if we already split for this snapshot
   if (!meta.has(snapshot)) {

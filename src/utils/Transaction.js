@@ -14,9 +14,8 @@ import {
   UpdateEncoderV1, UpdateEncoderV2, GC, StructStore, AbstractType, AbstractStruct, YEvent, Doc // eslint-disable-line
 } from '../internals.js'
 
-import * as map from 'lib0/map'
-import * as logging from 'lib0/logging'
-import { callAll } from 'lib0/function'
+import { callAll } from './function.js'
+import { setIfUndefined, any } from './map.js'
 
 /**
  * A transaction is created for every change on the Yjs model. It is possible
@@ -121,7 +120,7 @@ export class Transaction {
  * @return {boolean} Whether data was written.
  */
 export const writeUpdateMessageFromTransaction = (encoder, transaction) => {
-  if (transaction.deleteSet.clients.size === 0 && !map.any(transaction.afterState, (clock, client) => transaction.beforeState.get(client) !== clock)) {
+  if (transaction.deleteSet.clients.size === 0 && !any(transaction.afterState, (clock, client) => transaction.beforeState.get(client) !== clock)) {
     return false
   }
   sortAndMergeDeleteSet(transaction.deleteSet)
@@ -152,7 +151,7 @@ export const nextID = transaction => {
 export const addChangedTypeToTransaction = (transaction, type, parentSub) => {
   const item = type._item
   if (item === null || (item.id.clock < (transaction.beforeState.get(item.id.client) || 0) && !item.deleted)) {
-    map.setIfUndefined(transaction.changed, type, new Set()).add(parentSub)
+    setIfUndefined(transaction.changed, type, new Set()).add(parentSub)
   }
 }
 
@@ -329,7 +328,7 @@ const cleanupTransactions = (transactionCleanups, i) => {
         }
       }
       if (!transaction.local && transaction.afterState.get(doc.clientID) !== transaction.beforeState.get(doc.clientID)) {
-        logging.print(logging.ORANGE, logging.BOLD, '[yjs] ', logging.UNBOLD, logging.RED, 'Changed the client-id because another client seems to be using it.')
+        console.log('Changed the client-id because another client seems to be using it.')
         doc.clientID = generateNewClientId()
       }
       // @todo Merge all the transactions into one and provide send the data as a single update message

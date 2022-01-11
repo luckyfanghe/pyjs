@@ -40,11 +40,11 @@ import {
   DSDecoderV2, Doc, Transaction, GC, Item, StructStore // eslint-disable-line
 } from '../internals.js'
 
-import * as binary from '../utils/binary.js'
+import * as binary from './binary.js'
+import { setIfUndefined, create } from './map.js'
 
 import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
-import * as map from 'lib0/map'
 
 /**
  * @param {UpdateEncoderV1 | UpdateEncoderV2} encoder
@@ -114,7 +114,7 @@ export const readClientsStructRefs = (decoder, doc) => {
   /**
    * @type {Map<number, { i: number, refs: Array<Item | GC> }>}
    */
-  const clientRefs = map.create()
+  const clientRefs = create()
   const numOfStateUpdates = decoding.readVarUint(decoder.restDecoder)
   for (let i = 0; i < numOfStateUpdates; i++) {
     const numberOfStructs = decoding.readVarUint(decoder.restDecoder)
@@ -301,7 +301,7 @@ const integrateStructs = (transaction, store, clientsStructRefs) => {
   // iterate over all struct readers until we are done
   while (true) {
     if (stackHead.constructor !== Skip) {
-      const localClock = map.setIfUndefined(state, stackHead.id.client, () => getState(store, stackHead.id.client))
+      const localClock = setIfUndefined(state, stackHead.id.client, () => getState(store, stackHead.id.client))
       const offset = localClock - stackHead.id.clock
       if (offset < 0) {
         // update from the same client is missing

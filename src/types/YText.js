@@ -31,9 +31,9 @@ import {
 } from '../internals.js'
 
 import { unexpectedCase } from '../utils/errors.js'
+import { create, copy } from '../utils/map.js'
 
 import * as object from 'lib0/object'
-import * as map from 'lib0/map'
 
 /**
  * @param {any} a
@@ -415,8 +415,8 @@ export const cleanupYTextFormatting = type => {
   transact(/** @type {Doc} */ (type.doc), transaction => {
     let start = /** @type {Item} */ (type._start)
     let end = type._start
-    let startAttributes = map.create()
-    const currentAttributes = map.copy(startAttributes)
+    let startAttributes = create()
+    const currentAttributes = copy(startAttributes)
     while (end) {
       if (end.deleted === false) {
         switch (end.content.constructor) {
@@ -425,7 +425,7 @@ export const cleanupYTextFormatting = type => {
             break
           default:
             res += cleanupFormattingGap(transaction, start, end, startAttributes, currentAttributes)
-            startAttributes = map.copy(currentAttributes)
+            startAttributes = copy(currentAttributes)
             start = end
             break
         }
@@ -447,7 +447,7 @@ export const cleanupYTextFormatting = type => {
  */
 const deleteText = (transaction, currPos, length) => {
   const startLength = length
-  const startAttrs = map.copy(currPos.currentAttributes)
+  const startAttrs = copy(currPos.currentAttributes)
   const start = currPos.right
   while (length > 0 && currPos.right !== null) {
     if (currPos.right.deleted === false) {
@@ -466,7 +466,7 @@ const deleteText = (transaction, currPos, length) => {
     currPos.forward()
   }
   if (start) {
-    cleanupFormattingGap(transaction, start, currPos.right, startAttrs, map.copy(currPos.currentAttributes))
+    cleanupFormattingGap(transaction, start, currPos.right, startAttrs, copy(currPos.currentAttributes))
   }
   const parent = /** @type {AbstractType<any>} */ (/** @type {Item} */ (currPos.left || currPos.right).parent)
   if (parent._searchMarker) {

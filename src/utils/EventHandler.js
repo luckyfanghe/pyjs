@@ -1,4 +1,4 @@
-import * as f from 'lib0/function'
+import { callAll } from './function.js'
 
 /**
  * General event handler implementation.
@@ -84,4 +84,4 @@ export const removeAllEventHandlerListeners = eventHandler => {
  * @function
  */
 export const callEventHandlerListeners = (eventHandler, arg0, arg1) =>
-  f.callAll(eventHandler.l, [arg0, arg1])
+  callAll(eventHandler.l, [arg0, arg1])

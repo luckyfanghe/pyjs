@@ -14,9 +14,9 @@ import {
 } from '../internals.js'
 
 import * as array from './array.js'
+import { setIfUndefined } from './map.js'
 
 import { Observable } from 'lib0/observable'
-import * as map from 'lib0/map'
 import * as promise from 'lib0/promise'
 
 export const generateNewClientId = () => new Uint32Array((len) =>{
@@ -160,7 +160,7 @@ export class Doc extends Observable {
    * @public
    */
   get (name, TypeConstructor = AbstractType) {
-    const type = map.setIfUndefined(this.share, name, () => {
+    const type = setIfUndefined(this.share, name, () => {
       // @ts-ignore
       const t = new TypeConstructor()
       t._integrate(this, null)
