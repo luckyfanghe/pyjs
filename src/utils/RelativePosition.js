@@ -12,7 +12,7 @@ import {
   ID, Doc, AbstractType // eslint-disable-line
 } from '../internals.js'
 
-import { unexpectedCase } from '../utils/errors.js'
+import { unexpectedCase } from './errors.js'
 
 import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'

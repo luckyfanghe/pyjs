@@ -13,9 +13,10 @@ import {
   ContentDoc, Item, Transaction, YEvent // eslint-disable-line
 } from '../internals.js'
 
+import * as array from './array.js'
+
 import { Observable } from 'lib0/observable'
 import * as map from 'lib0/map'
-import * as array from 'lib0/array'
 import * as promise from 'lib0/promise'
 
 export const generateNewClientId = () => new Uint32Array((len) =>{

@@ -5,7 +5,7 @@ import {
   Transaction, ID, Item, DSDecoderV2 // eslint-disable-line
 } from '../internals.js'
 
-import { unexpectedCase } from '../utils/errors.js'
+import { unexpectedCase } from './errors.js'
 
 export class StructStore {
   constructor () {

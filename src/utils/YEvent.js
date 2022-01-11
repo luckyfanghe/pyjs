@@ -4,7 +4,7 @@ import {
   Item, AbstractType, Transaction, AbstractStruct // eslint-disable-line
 } from '../internals.js'
 
-import * as array from 'lib0/array'
+import { last } from './array.js'
 
 /**
  * YEvent describes the changes on a YType.
@@ -98,14 +98,14 @@ export class YEvent {
             if (this.deletes(item)) {
               if (prev !== null && this.deletes(prev)) {
                 action = 'delete'
-                oldValue = array.last(prev.content.getContent())
+                oldValue = last(prev.content.getContent())
               } else {
                 return
               }
             } else {
               if (prev !== null && this.deletes(prev)) {
                 action = 'update'
-                oldValue = array.last(prev.content.getContent())
+                oldValue = last(prev.content.getContent())
               } else {
                 action = 'add'
                 oldValue = undefined
@@ -114,7 +114,7 @@ export class YEvent {
           } else {
             if (this.deletes(item)) {
               action = 'delete'
-              oldValue = array.last(/** @type {Item} */ item.content.getContent())
+              oldValue = last(/** @type {Item} */ item.content.getContent())
             } else {
               return // nop
             }

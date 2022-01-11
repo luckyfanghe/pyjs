@@ -8,7 +8,8 @@ import {
   DSDecoderV1, DSEncoderV1, DSDecoderV2, DSEncoderV2, Item, GC, StructStore, Transaction, ID // eslint-disable-line
 } from '../internals.js'
 
-import * as array from 'lib0/array'
+import { appendTo } from './array.js'
+
 import * as map from 'lib0/map'
 import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
@@ -150,7 +151,7 @@ export const mergeDeleteSets = dss => {
          */
         const dels = delsLeft.slice()
         for (let i = dssI + 1; i < dss.length; i++) {
-          array.appendTo(dels, dss[i].clients.get(client) || [])
+          appendTo(dels, dss[i].clients.get(client) || [])
         }
         merged.clients.set(client, dels)
       }
