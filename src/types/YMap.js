@@ -17,7 +17,7 @@ import {
   UpdateDecoderV1, UpdateDecoderV2, UpdateEncoderV1, UpdateEncoderV2, Doc, Transaction, Item // eslint-disable-line
 } from '../internals.js'
 
-import * as iterator from 'lib0/iterator'
+import { iteratorMap } from '../utils/iterator.js'
 
 /**
  * @template T
@@ -139,7 +139,7 @@ export class YMap extends AbstractType {
    * @return {IterableIterator<string>}
    */
   keys () {
-    return iterator.iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => v[0])
+    return iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => v[0])
   }
 
   /**
@@ -148,7 +148,7 @@ export class YMap extends AbstractType {
    * @return {IterableIterator<any>}
    */
   values () {
-    return iterator.iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => v[1].content.getContent()[v[1].length - 1])
+    return iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => v[1].content.getContent()[v[1].length - 1])
   }
 
   /**
@@ -157,7 +157,7 @@ export class YMap extends AbstractType {
    * @return {IterableIterator<any>}
    */
   entries () {
-    return iterator.iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => [v[0], v[1].content.getContent()[v[1].length - 1]])
+    return iteratorMap(createMapIterator(this._map), /** @param {any} v */ v => [v[0], v[1].content.getContent()[v[1].length - 1]])
   }
 
   /**

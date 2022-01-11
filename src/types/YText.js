@@ -33,14 +33,13 @@ import {
 import { unexpectedCase } from '../utils/errors.js'
 import { create, copy } from '../utils/map.js'
 
-import * as object from 'lib0/object'
-
 /**
  * @param {any} a
  * @param {any} b
  * @return {boolean}
  */
-const equalAttrs = (a, b) => a === b || (typeof a === 'object' && typeof b === 'object' && a && b && object.equalFlat(a, b))
+const equalFlat = (a, b) => a === b || (length(a) === length(b) && every(a, (val, key) => (val !== undefined || hasProperty(b, key)) && b[key] === val))
+const equalAttrs = (a, b) => a === b || (typeof a === 'object' && typeof b === 'object' && a && b && equalFlat(a, b))
 
 export class ItemTextListPosition {
   /**

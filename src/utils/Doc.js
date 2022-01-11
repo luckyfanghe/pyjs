@@ -17,7 +17,6 @@ import * as array from './array.js'
 import { setIfUndefined } from './map.js'
 
 import { Observable } from 'lib0/observable'
-import * as promise from 'lib0/promise'
 
 export const generateNewClientId = () => new Uint32Array((len) =>{
   const buf = new ArrayBuffer(len)
@@ -85,7 +84,7 @@ export class Doc extends Observable {
     this.autoLoad = autoLoad
     this.meta = meta
     this.isLoaded = false
-    this.whenLoaded = promise.create(resolve => {
+    this.whenLoaded = new Promise(resolve => {
       this.on('load', () => {
         this.isLoaded = true
         resolve(this)

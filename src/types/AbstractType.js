@@ -16,8 +16,7 @@ import {
 
 import { create, methodUnimplemented } from '../utils/errors.js'
 import { setIfUndefined, entries } from '../utils/map.js'
-
-import * as iterator from 'lib0/iterator'
+import { iteratorFilter } from '../utils/iterator.js'
 
 const maxSearchMarker = 80
 
@@ -909,4 +908,4 @@ export const typeMapGetSnapshot = (parent, key, snapshot) => {
  * @private
  * @function
  */
-export const createMapIterator = map => iterator.iteratorFilter(entries(), /** @param {any} entry */ entry => !entry[1].deleted)
+export const createMapIterator = map => iteratorFilter(entries(), /** @param {any} entry */ entry => !entry[1].deleted)
