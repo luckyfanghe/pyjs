@@ -14,12 +14,23 @@ import {
 } from '../internals.js'
 
 import { Observable } from 'lib0/observable'
-import * as random from 'lib0/random'
 import * as map from 'lib0/map'
 import * as array from 'lib0/array'
 import * as promise from 'lib0/promise'
 
-export const generateNewClientId = random.uint32
+export const generateNewClientId = () => new Uint32Array((len) =>{
+  const buf = new ArrayBuffer(len)
+  const arr = new Uint8Array(buf)
+  for (let i = 0; i < len; i++) {
+    arr[i] = Math.ceil((Math.random() * 0xFFFFFFFF) >>> 0)
+  }
+  return buf
+})[0]
+
+const uuidv4Template = [1e7] + -1e3 + -4e3 + -8e3 + -1e11
+export const uuidv4 = () => uuidv4Template.replace(/[018]/g, /** @param {number} c */ c =>
+  (c ^ uint32() & 15 >> c / 4).toString(16)
+)
 
 /**
  * @typedef {Object} DocOpts
@@ -40,7 +51,7 @@ export class Doc extends Observable {
   /**
    * @param {DocOpts} [opts] configuration
    */
-  constructor ({ guid = random.uuidv4(), collectionid = null, gc = true, gcFilter = () => true, meta = null, autoLoad = false, shouldLoad = true } = {}) {
+  constructor ({ guid = uuidv4(), collectionid = null, gc = true, gcFilter = () => true, meta = null, autoLoad = false, shouldLoad = true } = {}) {
     super()
     this.gc = gc
     this.gcFilter = gcFilter
