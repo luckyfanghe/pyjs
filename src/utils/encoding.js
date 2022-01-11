@@ -44,7 +44,6 @@ import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
 import * as binary from 'lib0/binary'
 import * as map from 'lib0/map'
-import * as math from 'lib0/math'
 
 /**
  * @param {UpdateEncoderV1 | UpdateEncoderV2} encoder
@@ -56,7 +55,7 @@ import * as math from 'lib0/math'
  */
 const writeStructs = (encoder, structs, client, clock) => {
   // write first id
-  clock = math.max(clock, structs[0].id.clock) // make sure the first id exists
+  clock = Math.max(clock, structs[0].id.clock) // make sure the first id exists
   const startNewStructs = findIndexSS(structs, clock)
   // write # encoded structs
   encoding.writeVarUint(encoder.restEncoder, structs.length - startNewStructs)

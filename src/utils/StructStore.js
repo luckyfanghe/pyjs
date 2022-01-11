@@ -7,8 +7,6 @@ import {
 
 import { unexpectedCase } from '../utils/errors.js'
 
-import * as math from 'lib0/math'
-
 export class StructStore {
   constructor () {
     /**
@@ -121,7 +119,7 @@ export const findIndexSS = (structs, clock) => {
   // @todo does it even make sense to pivot the search?
   // If a good split misses, it might actually increase the time to find the correct item.
   // Currently, the only advantage is that search with pivoting might find the item on the first try.
-  let midindex = math.floor((clock / (midclock + mid.length - 1)) * right) // pivoting the search
+  let midindex = Math.floor((clock / (midclock + mid.length - 1)) * right) // pivoting the search
   while (left <= right) {
     mid = structs[midindex]
     midclock = mid.id.clock
@@ -133,7 +131,7 @@ export const findIndexSS = (structs, clock) => {
     } else {
       right = midindex - 1
     }
-    midindex = math.floor((left + right) / 2)
+    midindex = Math.floor((left + right) / 2)
   }
   // Always check state before looking for a struct in StructStore
   // Therefore the case of not finding a struct is unexpected

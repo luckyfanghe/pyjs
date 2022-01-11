@@ -15,7 +15,6 @@ import {
 } from '../internals.js'
 
 import * as map from 'lib0/map'
-import * as math from 'lib0/math'
 import * as set from 'lib0/set'
 import * as logging from 'lib0/logging'
 import { callAll } from 'lib0/function'
@@ -215,7 +214,7 @@ const tryMergeDeleteSet = (ds, store) => {
     for (let di = deleteItems.length - 1; di >= 0; di--) {
       const deleteItem = deleteItems[di]
       // start with merging the item next to the last deleted item
-      const mostRightIndexToCheck = math.min(structs.length - 1, 1 + findIndexSS(structs, deleteItem.clock + deleteItem.len - 1))
+      const mostRightIndexToCheck = Math.min(structs.length - 1, 1 + findIndexSS(structs, deleteItem.clock + deleteItem.len - 1))
       for (
         let si = mostRightIndexToCheck, struct = structs[si];
         si > 0 && struct.id.clock >= deleteItem.clock;
@@ -310,7 +309,7 @@ const cleanupTransactions = (transactionCleanups, i) => {
         if (beforeClock !== clock) {
           const structs = /** @type {Array<GC|Item>} */ (store.clients.get(client))
           // we iterate from right to left so we can safely remove entries
-          const firstChangePos = math.max(findIndexSS(structs, beforeClock), 1)
+          const firstChangePos = Math.max(findIndexSS(structs, beforeClock), 1)
           for (let i = structs.length - 1; i >= firstChangePos; i--) {
             tryToMergeWithLeft(structs, i)
           }

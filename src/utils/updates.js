@@ -3,7 +3,7 @@ import * as binary from 'lib0/binary'
 import * as decoding from 'lib0/decoding'
 import * as encoding from 'lib0/encoding'
 import * as logging from 'lib0/logging'
-import * as math from 'lib0/math'
+
 import {
   createID,
   readItemContent,
@@ -436,7 +436,7 @@ export const diffUpdateV2 = (update, sv, YDecoder = UpdateDecoderV2, YEncoder = 
       continue
     }
     if (curr.id.clock + curr.length > svClock) {
-      writeStructToLazyStructWriter(lazyStructWriter, curr, math.max(svClock - curr.id.clock, 0))
+      writeStructToLazyStructWriter(lazyStructWriter, curr, Math.max(svClock - curr.id.clock, 0))
       reader.next()
       while (reader.curr && reader.curr.id.client === currClient) {
         writeStructToLazyStructWriter(lazyStructWriter, reader.curr, 0)

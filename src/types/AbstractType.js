@@ -18,7 +18,6 @@ import { create, methodUnimplemented } from '../utils/errors.js'
 
 import * as map from 'lib0/map'
 import * as iterator from 'lib0/iterator'
-import * as math from 'lib0/math'
 
 const maxSearchMarker = 80
 
@@ -99,7 +98,7 @@ export const findMarker = (yarray, index) => {
   if (yarray._start === null || index === 0 || yarray._searchMarker === null) {
     return null
   }
-  const marker = yarray._searchMarker.length === 0 ? null : yarray._searchMarker.reduce((a, b) => math.abs(index - a.index) < math.abs(index - b.index) ? a : b)
+  const marker = yarray._searchMarker.length === 0 ? null : yarray._searchMarker.reduce((a, b) => Math.abs(index - a.index) < Math.abs(index - b.index) ? a : b)
   let p = yarray._start
   let pindex = 0
   if (marker !== null) {
@@ -158,7 +157,7 @@ export const findMarker = (yarray, index) => {
   //   window.lengthes.push(marker.index - pindex)
   //   console.log('distance', marker.index - pindex, 'len', p && p.parent.length)
   // }
-  if (marker !== null && math.abs(marker.index - pindex) < /** @type {YText|YArray<any>} */ (p.parent).length / maxSearchMarker) {
+  if (marker !== null && Math.abs(marker.index - pindex) < /** @type {YText|YArray<any>} */ (p.parent).length / maxSearchMarker) {
     // adjust existing marker
     overwriteMarker(marker, p, pindex)
     return marker
@@ -205,7 +204,7 @@ export const updateMarkerChanges = (searchMarker, index, len) => {
       p.marker = true
     }
     if (index < m.index || (len > 0 && index === m.index)) { // a simple index <= m.index check would actually suffice
-      m.index = math.max(index, m.index + len)
+      m.index = Math.max(index, m.index + len)
     }
   }
 }

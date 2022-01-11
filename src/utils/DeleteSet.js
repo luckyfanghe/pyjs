@@ -9,7 +9,6 @@ import {
 } from '../internals.js'
 
 import * as array from 'lib0/array'
-import * as math from 'lib0/math'
 import * as map from 'lib0/map'
 import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
@@ -77,7 +76,7 @@ export const findIndexDS = (dis, clock) => {
   let left = 0
   let right = dis.length - 1
   while (left <= right) {
-    const midindex = math.floor((left + right) / 2)
+    const midindex = Math.floor((left + right) / 2)
     const mid = dis[midindex]
     const midclock = mid.clock
     if (midclock <= clock) {
@@ -123,7 +122,7 @@ export const sortAndMergeDeleteSet = ds => {
       const left = dels[j - 1]
       const right = dels[i]
       if (left.clock + left.len >= right.clock) {
-        left.len = math.max(left.len, right.clock + right.len - left.clock)
+        left.len = Math.max(left.len, right.clock + right.len - left.clock)
       } else {
         if (j < i) {
           dels[j] = right
