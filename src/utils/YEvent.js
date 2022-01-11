@@ -4,7 +4,6 @@ import {
   Item, AbstractType, Transaction, AbstractStruct // eslint-disable-line
 } from '../internals.js'
 
-import * as set from 'lib0/set'
 import * as array from 'lib0/array'
 
 /**
@@ -154,8 +153,8 @@ export class YEvent {
     let changes = this._changes
     if (changes === null) {
       const target = this.target
-      const added = set.create()
-      const deleted = set.create()
+      const added = new Set()
+      const deleted = new Set()
       /**
        * @type {Array<{insert:Array<any>}|{delete:number}|{retain:number}>}
        */

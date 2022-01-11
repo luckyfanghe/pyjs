@@ -15,7 +15,6 @@ import {
 } from '../internals.js'
 
 import * as map from 'lib0/map'
-import * as set from 'lib0/set'
 import * as logging from 'lib0/logging'
 import { callAll } from 'lib0/function'
 
@@ -153,7 +152,7 @@ export const nextID = transaction => {
 export const addChangedTypeToTransaction = (transaction, type, parentSub) => {
   const item = type._item
   if (item === null || (item.id.clock < (transaction.beforeState.get(item.id.client) || 0) && !item.deleted)) {
-    map.setIfUndefined(transaction.changed, type, set.create).add(parentSub)
+    map.setIfUndefined(transaction.changed, type, new Set()).add(parentSub)
   }
 }
 
