@@ -13,7 +13,6 @@ import {
   Transaction, Doc, Item, GC, DeleteSet, AbstractType, YEvent // eslint-disable-line
 } from '../internals.js'
 
-import * as time from 'lib0/time'
 import { Observable } from 'lib0/observable'
 
 class StackItem {
@@ -185,7 +184,7 @@ export class UndoManager extends Observable {
           addToDeleteSet(insertions, client, startClock, len)
         }
       })
-      const now = time.getUnixTime()
+      const now = Date.now
       if (now - this.lastChange < captureTimeout && stack.length > 0 && !undoing && !redoing) {
         // append change to last stack op
         const lastOp = stack[stack.length - 1]

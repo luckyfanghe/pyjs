@@ -1,6 +1,6 @@
 
 import { AbstractType } from '../internals.js' // eslint-disable-line
-import { unexpectedCase } from '../utils/errors.js'
+import { unexpectedCase } from './errors.js'
 
 import * as decoding from 'lib0/decoding'
 import * as encoding from 'lib0/encoding'

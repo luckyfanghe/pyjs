@@ -27,7 +27,7 @@ import {
 
 import { methodUnimplemented, unexpectedCase } from '../utils/errors.js'
 
-import * as binary from 'lib0/binary'
+import * as binary from '../utils/binary.js'
 
 /**
  * @todo This should return several items

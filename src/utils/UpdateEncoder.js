@@ -2,7 +2,7 @@
 
 import * as encoding from 'lib0/encoding'
 
-import { unexpectedCase } from '../utils/errors.js'
+import { unexpectedCase } from './errors.js'
 import {
   ID // eslint-disable-line
 } from '../internals.js'
