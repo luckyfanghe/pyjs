@@ -11,8 +11,8 @@ import {
 import { appendTo } from './array.js'
 import { setIfUndefined } from './map.js'
 
-import * as encoding from 'lib0/encoding'
-import * as decoding from 'lib0/decoding'
+import { writeVarUint } from './lib0_encoding.js'
+import { readVarUint } from './lib0_decoding.js'
 
 export class DeleteItem {
   /**
@@ -218,12 +218,12 @@ export const createDeleteSetFromStructStore = ss => {
  * @function
  */
 export const writeDeleteSet = (encoder, ds) => {
-  encoding.writeVarUint(encoder.restEncoder, ds.clients.size)
+  writeVarUint(encoder.restEncoder, ds.clients.size)
   ds.clients.forEach((dsitems, client) => {
     encoder.resetDsCurVal()
-    encoding.writeVarUint(encoder.restEncoder, client)
+    writeVarUint(encoder.restEncoder, client)
     const len = dsitems.length
-    encoding.writeVarUint(encoder.restEncoder, len)
+    writeVarUint(encoder.restEncoder, len)
     for (let i = 0; i < len; i++) {
       const item = dsitems[i]
       encoder.writeDsClock(item.clock)
@@ -241,11 +241,11 @@ export const writeDeleteSet = (encoder, ds) => {
  */
 export const readDeleteSet = decoder => {
   const ds = new DeleteSet()
-  const numClients = decoding.readVarUint(decoder.restDecoder)
+  const numClients = readVarUint(decoder.restDecoder)
   for (let i = 0; i < numClients; i++) {
     decoder.resetDsCurVal()
-    const client = decoding.readVarUint(decoder.restDecoder)
-    const numberOfDeletes = decoding.readVarUint(decoder.restDecoder)
+    const client = readVarUint(decoder.restDecoder)
+    const numberOfDeletes = readVarUint(decoder.restDecoder)
     if (numberOfDeletes > 0) {
       const dsField = setIfUndefined(ds.clients, client, () => [])
       for (let i = 0; i < numberOfDeletes; i++) {
@@ -271,11 +271,11 @@ export const readDeleteSet = decoder => {
  */
 export const readAndApplyDeleteSet = (decoder, transaction, store) => {
   const unappliedDS = new DeleteSet()
-  const numClients = decoding.readVarUint(decoder.restDecoder)
+  const numClients = readVarUint(decoder.restDecoder)
   for (let i = 0; i < numClients; i++) {
     decoder.resetDsCurVal()
-    const client = decoding.readVarUint(decoder.restDecoder)
-    const numberOfDeletes = decoding.readVarUint(decoder.restDecoder)
+    const client = readVarUint(decoder.restDecoder)
+    const numberOfDeletes = readVarUint(decoder.restDecoder)
     const structs = store.clients.get(client) || []
     const state = getState(store, client)
     for (let i = 0; i < numberOfDeletes; i++) {
@@ -318,7 +318,7 @@ export const readAndApplyDeleteSet = (decoder, transaction, store) => {
   }
   if (unappliedDS.clients.size > 0) {
     const ds = new UpdateEncoderV2()
-    encoding.writeVarUint(ds.restEncoder, 0) // encode 0 structs
+    writeVarUint(ds.restEncoder, 0) // encode 0 structs
     writeDeleteSet(ds, unappliedDS)
     return ds.toUint8Array()
   }

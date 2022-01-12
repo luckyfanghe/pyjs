@@ -1,5 +1,5 @@
 import { copyUint8Array } from './buffer.js'
-import * as decoding from 'lib0/decoding'
+import * as decoding from './decoding.js'
 import {
   ID, createID
 } from '../internals.js'
@@ -257,7 +257,7 @@ export class UpdateDecoderV2 extends DSDecoderV2 {
   /**
    * This is mainly here for legacy purposes.
    *
-   * Initial we incoded objects using JSON. Now we use the much faster lib0/any-encoder. This method mainly exists for legacy purposes for the v1 encoder.
+   * Initial we incoded objects using JSON. Now we use the much faster lib0_any-encoder. This method mainly exists for legacy purposes for the v1 encoder.
    *
    * @return {any}
    */

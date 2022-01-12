@@ -1,7 +1,7 @@
 /**
  * Efficient schema-less binary encoding with support for variable length encoding.
  *
- * Use [lib0/encoding] with [lib0/decoding]. Every encoding function has a corresponding decoding function.
+ * Use [lib0_encoding] with [lib0_decoding]. Every encoding function has a corresponding decoding function.
  *
  * Encodes numbers in little-endian order (least to most significant byte order)
  * and is compatible with Golang's binary encoding (https://golang.org/pkg/encoding/binary/)
@@ -435,7 +435,7 @@
   * [0-30]   the beginning of the data range is used for custom purposes
   *          (defined by the function that uses this library)
   * [31-127] the end of the data range is used for data encoding by
-  *          lib0/encoding.js
+  *          lib0_encoding.js
   *
   * @param {Encoder} encoder
   * @param {undefined|null|number|bigint|boolean|string|Object<string,any>|Array<any>|Uint8Array} data

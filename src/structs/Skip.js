@@ -5,8 +5,7 @@ import {
 } from '../internals.js'
 
 import { unexpectedCase } from '../utils/errors.js'
-
-import * as encoding from 'lib0/encoding'
+import { writeVarUint } from '../utils/lib0_encoding.js'
 
 export const structSkipRefNumber = 10
 
@@ -48,7 +47,7 @@ export class Skip extends AbstractStruct {
   write (encoder, offset) {
     encoder.writeInfo(structSkipRefNumber)
     // write as VarUint because Skips can't make use of predictable length-encoding
-    encoding.writeVarUint(encoder.restEncoder, this.length - offset)
+    writeVarUint(encoder.restEncoder, this.length - offset)
   }
 
   /**

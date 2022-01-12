@@ -1,6 +1,6 @@
 
 
-import * as encoding from 'lib0/encoding'
+import * as encoding from './lib0_encoding.js'
 
 import { unexpectedCase } from './errors.js'
 import {

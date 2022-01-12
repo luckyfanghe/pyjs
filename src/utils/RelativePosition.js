@@ -14,8 +14,8 @@ import {
 
 import { unexpectedCase } from './errors.js'
 
-import * as encoding from 'lib0/encoding'
-import * as decoding from 'lib0/decoding'
+import { writeVarInt, writeVarUint, writeUint8, writeVarString, createEncoder, toUint8Array } from './lib0_encoding.js'
+import { readVarInt, readVarUint, readVarString, hasContent, createDecoder } from './lib0_decoding.js'
 
 /**
  * A relative position is based on the Yjs model and is not affected by document changes.
@@ -196,20 +196,20 @@ export const createRelativePositionFromTypeIndex = (type, index, assoc = 0) => {
 export const writeRelativePosition = (encoder, rpos) => {
   const { type, tname, item, assoc } = rpos
   if (item !== null) {
-    encoding.writeVarUint(encoder, 0)
+    writeVarUint(encoder, 0)
     writeID(encoder, item)
   } else if (tname !== null) {
     // case 2: found position at the end of the list and type is stored in y.share
-    encoding.writeUint8(encoder, 1)
-    encoding.writeVarString(encoder, tname)
+    writeUint8(encoder, 1)
+    writeVarString(encoder, tname)
   } else if (type !== null) {
     // case 3: found position at the end of the list and type is attached to an item
-    encoding.writeUint8(encoder, 2)
+    writeUint8(encoder, 2)
     writeID(encoder, type)
   } else {
     throw unexpectedCase()
   }
-  encoding.writeVarInt(encoder, assoc)
+  writeVarInt(encoder, assoc)
   return encoder
 }
 
@@ -218,9 +218,9 @@ export const writeRelativePosition = (encoder, rpos) => {
  * @return {Uint8Array}
  */
 export const encodeRelativePosition = rpos => {
-  const encoder = encoding.createEncoder()
+  const encoder = createEncoder()
   writeRelativePosition(encoder, rpos)
-  return encoding.toUint8Array(encoder)
+  return toUint8Array(encoder)
 }
 
 /**
@@ -233,21 +233,21 @@ export const readRelativePosition = decoder => {
   let type = null
   let tname = null
   let itemID = null
-  switch (decoding.readVarUint(decoder)) {
+  switch (readVarUint(decoder)) {
     case 0:
       // case 1: found position somewhere in the linked list
       itemID = readID(decoder)
       break
     case 1:
       // case 2: found position at the end of the list and type is stored in y.share
-      tname = decoding.readVarString(decoder)
+      tname = readVarString(decoder)
       break
     case 2: {
       // case 3: found position at the end of the list and type is attached to an item
       type = readID(decoder)
     }
   }
-  const assoc = decoding.hasContent(decoder) ? decoding.readVarInt(decoder) : 0
+  const assoc = hasContent(decoder) ? readVarInt(decoder) : 0
   return new RelativePosition(type, tname, itemID, assoc)
 }
 
@@ -255,7 +255,7 @@ export const readRelativePosition = decoder => {
  * @param {Uint8Array} uint8Array
  * @return {RelativePosition}
  */
-export const decodeRelativePosition = uint8Array => readRelativePosition(decoding.createDecoder(uint8Array))
+export const decodeRelativePosition = uint8Array => readRelativePosition(createDecoder(uint8Array))
 
 /**
  * @param {RelativePosition} rpos

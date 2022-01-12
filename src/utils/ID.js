@@ -2,8 +2,8 @@
 import { AbstractType } from '../internals.js' // eslint-disable-line
 import { unexpectedCase } from './errors.js'
 
-import * as decoding from 'lib0/decoding'
-import * as encoding from 'lib0/encoding'
+import { readVarUint } from './lib0_decoding.js'
+import { writeVarUint } from './lib0_encoding.js'
 
 
 export class ID {
@@ -51,8 +51,8 @@ export const createID = (client, clock) => new ID(client, clock)
  * @function
  */
 export const writeID = (encoder, id) => {
-  encoding.writeVarUint(encoder, id.client)
-  encoding.writeVarUint(encoder, id.clock)
+  writeVarUint(encoder, id.client)
+  writeVarUint(encoder, id.clock)
 }
 
 /**
@@ -67,7 +67,7 @@ export const writeID = (encoder, id) => {
  * @function
  */
 export const readID = decoder =>
-  createID(decoding.readVarUint(decoder), decoding.readVarUint(decoder))
+  createID(readVarUint(decoder), readVarUint(decoder))
 
 /**
  * The top types are mapped from y.share.get(keyname) => type.

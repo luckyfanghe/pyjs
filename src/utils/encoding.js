@@ -43,8 +43,8 @@ import {
 import * as binary from './binary.js'
 import { setIfUndefined, create } from './map.js'
 
-import * as encoding from 'lib0/encoding'
-import * as decoding from 'lib0/decoding'
+import { writeVarUint } from './lib0_encoding.js'
+import { readVarUint, createDecoder } from './lib0_decoding.js'
 
 /**
  * @param {UpdateEncoderV1 | UpdateEncoderV2} encoder
@@ -59,9 +59,9 @@ const writeStructs = (encoder, structs, client, clock) => {
   clock = Math.max(clock, structs[0].id.clock) // make sure the first id exists
   const startNewStructs = findIndexSS(structs, clock)
   // write # encoded structs
-  encoding.writeVarUint(encoder.restEncoder, structs.length - startNewStructs)
+  writeVarUint(encoder.restEncoder, structs.length - startNewStructs)
   encoder.writeClient(client)
-  encoding.writeVarUint(encoder.restEncoder, clock)
+  writeVarUint(encoder.restEncoder, clock)
   const firstStruct = structs[startNewStructs]
   // write first struct with an offset
   firstStruct.write(encoder, clock - firstStruct.id.clock)
@@ -93,7 +93,7 @@ export const writeClientsStructs = (encoder, store, _sm) => {
     }
   })
   // write # states that were updated
-  encoding.writeVarUint(encoder.restEncoder, sm.size)
+  writeVarUint(encoder.restEncoder, sm.size)
   // Write items with higher client ids first
   // This heavily improves the conflict algorithm.
   Array.from(sm.entries()).sort((a, b) => b[0] - a[0]).forEach(([client, clock]) => {
@@ -115,15 +115,15 @@ export const readClientsStructRefs = (decoder, doc) => {
    * @type {Map<number, { i: number, refs: Array<Item | GC> }>}
    */
   const clientRefs = create()
-  const numOfStateUpdates = decoding.readVarUint(decoder.restDecoder)
+  const numOfStateUpdates = readVarUint(decoder.restDecoder)
   for (let i = 0; i < numOfStateUpdates; i++) {
-    const numberOfStructs = decoding.readVarUint(decoder.restDecoder)
+    const numberOfStructs = readVarUint(decoder.restDecoder)
     /**
      * @type {Array<GC|Item>}
      */
     const refs = new Array(numberOfStructs)
     const client = decoder.readClient()
-    let clock = decoding.readVarUint(decoder.restDecoder)
+    let clock = readVarUint(decoder.restDecoder)
     // const start = performance.now()
     clientRefs.set(client, { i: 0, refs })
     for (let i = 0; i < numberOfStructs; i++) {
@@ -137,7 +137,7 @@ export const readClientsStructRefs = (decoder, doc) => {
         }
         case 10: { // Skip Struct (nothing to apply)
           // @todo we could reduce the amount of checks by adding Skip struct to clientRefs so we know that something is missing.
-          const len = decoding.readVarUint(decoder.restDecoder)
+          const len = readVarUint(decoder.restDecoder)
           refs[i] = new Skip(createID(client, clock), len)
           clock += len
           break
@@ -353,7 +353,7 @@ const integrateStructs = (transaction, store, clientsStructRefs) => {
     writeClientsStructs(encoder, restStructs, new Map())
     // write empty deleteset
     // writeDeleteSet(encoder, new DeleteSet())
-    encoding.writeVarUint(encoder.restEncoder, 0) // => no need for an extra function call, just write 0 deletes
+    writeVarUint(encoder.restEncoder, 0) // => no need for an extra function call, just write 0 deletes
     return { missing: missingSV, update: encoder.toUint8Array() }
   }
   return null
@@ -421,8 +421,8 @@ export const readUpdateV2 = (decoder, ydoc, transactionOrigin, structDecoder = n
     const dsRest = readAndApplyDeleteSet(structDecoder, transaction, store)
     if (store.pendingDs) {
       // @todo we could make a lower-bound state-vector check as we do above
-      const pendingDSUpdate = new UpdateDecoderV2(decoding.createDecoder(store.pendingDs))
-      decoding.readVarUint(pendingDSUpdate.restDecoder) // read 0 structs, because we only encode deletes in pendingdsupdate
+      const pendingDSUpdate = new UpdateDecoderV2(createDecoder(store.pendingDs))
+      readVarUint(pendingDSUpdate.restDecoder) // read 0 structs, because we only encode deletes in pendingdsupdate
       const dsRest2 = readAndApplyDeleteSet(pendingDSUpdate, transaction, store)
       if (dsRest && dsRest2) {
         // case 1: ds1 != null && ds2 != null
@@ -475,7 +475,7 @@ export const readUpdate = (decoder, ydoc, transactionOrigin) => readUpdateV2(dec
  * @function
  */
 export const applyUpdateV2 = (ydoc, update, transactionOrigin, YDecoder = UpdateDecoderV2) => {
-  const decoder = decoding.createDecoder(update)
+  const decoder = createDecoder(update)
   readUpdateV2(decoder, ydoc, transactionOrigin, new YDecoder(decoder))
 }
 
@@ -511,7 +511,7 @@ export const writeStateAsUpdate = (encoder, doc, targetStateVector = new Map()) 
  * Write all the document as a single update message that can be applied on the remote document. If you specify the state of the remote client (`targetState`) it will
  * only write the operations that are missing.
  *
- * Use `writeStateAsUpdate` instead if you are working with lib0/encoding.js#Encoder
+ * Use `writeStateAsUpdate` instead if you are working with lib0_encoding.js#Encoder
  *
  * @param {Doc} doc
  * @param {Uint8Array} [encodedTargetStateVector] The state of the target that receives the update. Leave empty to write all known structs
@@ -545,7 +545,7 @@ export const encodeStateAsUpdateV2 = (doc, encodedTargetStateVector = new Uint8A
  * Write all the document as a single update message that can be applied on the remote document. If you specify the state of the remote client (`targetState`) it will
  * only write the operations that are missing.
  *
- * Use `writeStateAsUpdate` instead if you are working with lib0/encoding.js#Encoder
+ * Use `writeStateAsUpdate` instead if you are working with lib0_encoding.js#Encoder
  *
  * @param {Doc} doc
  * @param {Uint8Array} [encodedTargetStateVector] The state of the target that receives the update. Leave empty to write all known structs
@@ -565,10 +565,10 @@ export const encodeStateAsUpdate = (doc, encodedTargetStateVector) => encodeStat
  */
 export const readStateVector = decoder => {
   const ss = new Map()
-  const ssLength = decoding.readVarUint(decoder.restDecoder)
+  const ssLength = readVarUint(decoder.restDecoder)
   for (let i = 0; i < ssLength; i++) {
-    const client = decoding.readVarUint(decoder.restDecoder)
-    const clock = decoding.readVarUint(decoder.restDecoder)
+    const client = readVarUint(decoder.restDecoder)
+    const clock = readVarUint(decoder.restDecoder)
     ss.set(client, clock)
   }
   return ss
@@ -582,7 +582,7 @@ export const readStateVector = decoder => {
  *
  * @function
  */
-// export const decodeStateVectorV2 = decodedState => readStateVector(new DSDecoderV2(decoding.createDecoder(decodedState)))
+// export const decodeStateVectorV2 = decodedState => readStateVector(new DSDecoderV2(createDecoder(decodedState)))
 
 /**
  * Read decodedState and return State as Map.
@@ -592,7 +592,7 @@ export const readStateVector = decoder => {
  *
  * @function
  */
-export const decodeStateVector = decodedState => readStateVector(new DSDecoderV1(decoding.createDecoder(decodedState)))
+export const decodeStateVector = decodedState => readStateVector(new DSDecoderV1(createDecoder(decodedState)))
 
 /**
  * @param {DSEncoderV1 | DSEncoderV2} encoder
@@ -600,10 +600,10 @@ export const decodeStateVector = decodedState => readStateVector(new DSDecoderV1
  * @function
  */
 export const writeStateVector = (encoder, sv) => {
-  encoding.writeVarUint(encoder.restEncoder, sv.size)
+  writeVarUint(encoder.restEncoder, sv.size)
   Array.from(sv.entries()).sort((a, b) => b[0] - a[0]).forEach(([client, clock]) => {
-    encoding.writeVarUint(encoder.restEncoder, client) // @todo use a special client decoder that is based on mapping
-    encoding.writeVarUint(encoder.restEncoder, clock)
+    writeVarUint(encoder.restEncoder, client) // @todo use a special client decoder that is based on mapping
+    writeVarUint(encoder.restEncoder, clock)
   })
   return encoder
 }
