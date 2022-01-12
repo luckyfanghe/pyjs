@@ -1,5 +1,5 @@
 
-import { Observable } from 'lib0/observable'
+import { Observable } from './observable.js'
 
 import {
   Doc // eslint-disable-line

@@ -1,4 +1,4 @@
-import * as buffer from 'lib0/buffer'
+import { copyUint8Array } from './buffer.js'
 import * as decoding from 'lib0/decoding'
 import {
   ID, createID
@@ -102,7 +102,7 @@ export class UpdateDecoderV1 extends DSDecoderV1 {
    * @return {Uint8Array}
    */
   readBuf () {
-    return buffer.copyUint8Array(decoding.readVarUint8Array(this.restDecoder))
+    return copyUint8Array(decoding.readVarUint8Array(this.restDecoder))
   }
 
   /**
