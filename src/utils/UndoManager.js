@@ -13,7 +13,7 @@ import {
   Transaction, Doc, Item, GC, DeleteSet, AbstractType, YEvent // eslint-disable-line
 } from '../internals.js'
 
-import { Observable } from 'lib0/observable'
+import { Observable } from './observable.js'
 
 class StackItem {
   /**

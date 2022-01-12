@@ -15,8 +15,7 @@ import {
 
 import * as array from './array.js'
 import { setIfUndefined } from './map.js'
-
-import { Observable } from 'lib0/observable'
+import { Observable } from './observable.js'
 
 export const generateNewClientId = () => new Uint32Array((len) =>{
   const buf = new ArrayBuffer(len)
