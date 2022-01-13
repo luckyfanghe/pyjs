@@ -5,6 +5,7 @@ import {
 } from '../internals.js'
 
 import { last } from './array.js'
+import * as set from './set.js'
 
 /**
  * YEvent describes the changes on a YType.
@@ -153,8 +154,8 @@ export class YEvent {
     let changes = this._changes
     if (changes === null) {
       const target = this.target
-      const added = new Set()
-      const deleted = new Set()
+      const added = set.create()
+      const deleted = set.create()
       /**
        * @type {Array<{insert:Array<any>}|{delete:number}|{retain:number}>}
        */

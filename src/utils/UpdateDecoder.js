@@ -1,5 +1,5 @@
 import { copyUint8Array } from './buffer.js'
-import * as decoding from './decoding.js'
+import * as decoding from './lib0_decoding.js'
 import {
   ID, createID
 } from '../internals.js'

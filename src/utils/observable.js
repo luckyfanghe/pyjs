@@ -6,7 +6,8 @@
 
  import * as map from './map.js'
  import * as array from './array.js'
- 
+ import * as set from './set.js'
+
  /**
   * Handles named events.
   *
@@ -26,7 +27,7 @@
     * @param {function} f
     */
    on (name, f) {
-     map.setIfUndefined(this._observers, name, new Set()).add(f)
+     map.setIfUndefined(this._observers, name, set.create).add(f)
    }
  
    /**

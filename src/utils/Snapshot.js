@@ -21,6 +21,7 @@ import {
 import { setIfUndefined } from './map.js'
 import { createDecoder } from './lib0_decoding.js'
 import { writeVarUint } from './lib0_encoding.js'
+import * as set from './set.js'
 
 export class Snapshot {
   /**
@@ -137,7 +138,7 @@ export const isVisible = (item, snapshot) => snapshot === undefined
  * @param {Snapshot} snapshot
  */
 export const splitSnapshotAffectedStructs = (transaction, snapshot) => {
-  const meta = setIfUndefined(transaction.meta, splitSnapshotAffectedStructs, new Set())
+  const meta = setIfUndefined(transaction.meta, splitSnapshotAffectedStructs, set.create)
   const store = transaction.doc.store
   // check if we already split for this snapshot
   if (!meta.has(snapshot)) {

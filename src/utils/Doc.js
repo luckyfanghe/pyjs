@@ -17,14 +17,17 @@ import * as array from './array.js'
 import { setIfUndefined } from './map.js'
 import { Observable } from './observable.js'
 
-export const generateNewClientId = () => new Uint32Array((len) =>{
+const cryptoRandomBuffer = len => {
   const buf = new ArrayBuffer(len)
   const arr = new Uint8Array(buf)
   for (let i = 0; i < len; i++) {
     arr[i] = Math.ceil((Math.random() * 0xFFFFFFFF) >>> 0)
   }
   return buf
-})[0]
+}
+
+export const uint32 = () => new Uint32Array(cryptoRandomBuffer(4))[0]
+export const generateNewClientId = uint32;
 
 const uuidv4Template = [1e7] + -1e3 + -4e3 + -8e3 + -1e11
 export const uuidv4 = () => uuidv4Template.replace(/[018]/g, /** @param {number} c */ c =>

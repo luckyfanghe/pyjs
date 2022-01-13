@@ -16,6 +16,7 @@ import {
 
 import { callAll } from './function.js'
 import { setIfUndefined, any } from './map.js'
+import * as set from './set.js'
 
 /**
  * A transaction is created for every change on the Yjs model. It is possible
@@ -151,7 +152,7 @@ export const nextID = transaction => {
 export const addChangedTypeToTransaction = (transaction, type, parentSub) => {
   const item = type._item
   if (item === null || (item.id.clock < (transaction.beforeState.get(item.id.client) || 0) && !item.deleted)) {
-    setIfUndefined(transaction.changed, type, new Set()).add(parentSub)
+    setIfUndefined(transaction.changed, type, set.create).add(parentSub)
   }
 }
 

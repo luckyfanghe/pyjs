@@ -908,4 +908,4 @@ export const typeMapGetSnapshot = (parent, key, snapshot) => {
  * @private
  * @function
  */
-export const createMapIterator = map => iteratorFilter(entries(), /** @param {any} entry */ entry => !entry[1].deleted)
+export const createMapIterator = map => iteratorFilter(map.entries(), /** @param {any} entry */ entry => !entry[1].deleted)
